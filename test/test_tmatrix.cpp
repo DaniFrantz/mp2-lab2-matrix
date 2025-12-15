@@ -197,3 +197,129 @@ TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)
 
 	ASSERT_ANY_THROW(m1 - m2);
 }
+TEST(TDynamicMatrix, can_get_X_and_Y_of_Line)
+{
+	int l = 0;
+	TDynamicMatrix<int> v(6);
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 3; j++) {
+
+				if (i + k < 6 && j + k < 6 && v[i + k][j + k] == 0) {
+					l += 1;
+					v[i + k][j + k] = l;
+				}
+			}
+		}
+	}
+	EXPECT_EQ(2, v.getting_lineX());
+	EXPECT_EQ(3, v.getting_lineY());
+}
+TEST(TBendedMatrix, can_construct_bended_from_dynamic)
+{
+	int l = 0;
+	TDynamicMatrix<int> v(6);
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 3; j++) {
+				
+				if (i + k < 6 && j + k < 6 &&  v[i + k][j + k] == 0){
+					l += 1;
+					v[i + k][j + k] = l; 
+				}
+			}
+		}
+	}
+	ASSERT_NO_THROW(TBendedMatrix<int> w(v));
+}
+TEST(TBendedMatrix, can_recreate_matrix_from_bended)
+{
+	int l = 0;
+	TDynamicMatrix<int> v(6);
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 3; j++) {
+
+				if (i + k < 6 && j + k < 6 && v[i + k][j + k] == 0) {
+					l += 1;
+					v[i + k][j + k] = l;
+				}
+			}
+		}
+	}
+	TBendedMatrix<int> w(v);
+	EXPECT_EQ(v, w.ReturnMatrix());
+}
+//TEST(TBendedMatrix, can_use_output_operator)
+//{
+//	int l = 0;
+//	TDynamicMatrix<int> v(7);
+//	for (int k = 0; k < 6; k++) {
+//		for (int i = 0; i < 2; i++) {
+//			for (int j = 0; j < 5; j++) {
+//
+//				if (i + k < 7 && j + k < 7 && v[i + k][j + k] == 0) {
+//					l += 1;
+//					v[i + k][j + k] = l;
+//				}
+//			}
+//		}
+//	}
+//	TBendedMatrix<int> w(v);
+//	EXPECT_EQ(v, w.ReturnMatrix());
+//	ASSERT_NO_THROW(cout << w);
+//}
+TEST(TBendedMatrix, can_use_index_operand)
+{
+	int l = 0;
+	TDynamicMatrix<int> v(7);
+	for (int k = 0; k < 6; k++) {
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 5; j++) {
+
+				if (i + k < 7 && j + k < 7 && v[i + k][j + k] == 0) {
+					l += 1;
+					v[i + k][j + k] = l;
+				}
+			}
+		}
+	}
+	TBendedMatrix<int> w(v);
+	ASSERT_NO_THROW(w[30]);
+}
+TEST(TSparseMatrix, can_construct_from_TDynamicMatrix)
+{
+	TDynamicMatrix<int> v(6);
+	v[1][1] = 1; // 0 0 0 0 0 0
+	v[4][1] = 2; // 0 1 0 0 2 0
+	v[2][4] = 3; // 0 0 0 0 0 0
+	v[3][5] = 4; // 0 0 0 0 0 0
+				 // 0 0 3 0 0 0
+				 // 0 0 0 4 0 0
+	TSparseMatrix<int> w(v);
+	for (int i = 0; i < w.num_of_col(); i++) {
+		cout << w.getRow(i) << ' ';
+	}
+	cout << '\n';
+	for (int i = 0; i < w.getSize(); i++) {
+		cout << w.getIndCol(i) << ' ';
+	}
+	cout << '\n';
+	for (int i = 0; i < w.getSize(); i++) {
+		cout << w.getValue(i) << ' ';
+	}
+	cout << '\n';
+
+}
+TEST(TSparseMatrix, can_use_output_operator)
+{
+	TDynamicMatrix<int> v(6);
+	v[1][1] = 1; // 0 0 0 0 0 0
+	v[4][1] = 2; // 0 1 0 0 2 0
+	v[2][4] = 3; // 0 0 0 0 0 0
+	v[3][5] = 4; // 0 0 0 0 0 0
+				 // 0 0 3 0 0 0
+				 // 0 0 0 4 0 0
+	TSparseMatrix<int> w(v);
+	cout << w;
+}
